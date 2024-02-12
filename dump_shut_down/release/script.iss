@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Dump Shutdown"
-#define MyAppVersion "1"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Nemo"
 #define MyAppURL "https://github.com/nemo-i/My-dump-Project/tree/master/dump_shut_down#readme"
 #define MyAppExeName "Dump Shutdown.exe"
