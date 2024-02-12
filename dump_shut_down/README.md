@@ -6,6 +6,8 @@ Dump Shutdown is a simple yet powerful desktop application designed to effortles
 - **Keyboard Controls**: Navigate the app swiftly using keyboard shortcuts:
   - Press `r` to reset all values.
   - Long Press on any area of the app to drag it
+  - https://github.com/nemo-i/My-dump-Project/assets/133984357/c4b79c46-dc44-45ab-a541-66edda03e8b8
+
 ### Features:
 
 - **Intuitive UI**: Designed with simplicity in mind, Dump Shutdown provides a streamlined interface for efficient usage.
