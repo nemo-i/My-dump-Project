@@ -8,6 +8,40 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:window_manager/window_manager.dart';
 
+final ligthTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: const ColorScheme(
+    brightness: Brightness.light,
+    primary: Color(0xFFE6E6E6),
+    onPrimary: Color(0xFF91968D),
+    secondary: Color(0xFFE86F67),
+    onSecondary: Colors.white,
+    error: Colors.redAccent,
+    onError: Colors.white,
+    background: Color(0xFFE6E6E6),
+    onBackground: Colors.black,
+    surface: Colors.white,
+    onSurface: Colors.black,
+  ),
+);
+
+final darkTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: const ColorScheme(
+    brightness: Brightness.dark,
+    primary: Color(0xFF3A3A3A),
+    onPrimary: Color(0xFF91968D),
+    secondary: Color(0xFF33BF24),
+    onSecondary: Colors.white,
+    error: Colors.redAccent,
+    onError: Colors.white,
+    background: Color(0xFFE6E6E6),
+    onBackground: Colors.black,
+    surface: Color(0xFF909589),
+    onSurface: Colors.black,
+  ),
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
@@ -114,110 +148,19 @@ class _DumpShutDownState extends State<DumpShutDown> {
           await windowManager.startDragging();
         },
         child: MaterialApp(
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
+          theme: ligthTheme,
+          darkTheme: darkTheme,
           themeMode: EasyDynamicTheme.of(context).themeMode,
-          home: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                height: 250,
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Container(
-                      width: 300,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60),
-                        color: const Color(0xFFE6E6E6),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(25),
-                      width: 200,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          width: 2.5,
-                          color: const Color(0xFFC4C8CB),
-                        ),
-                        color: const Color(0xFF91968D),
-                      ),
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        child: TimeSegement(
-                          hour: h,
-                          isLast: true,
-                          min: m,
-                          sec: s,
-                          selected: selected,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.all(45.0),
-                          child: Row(
-                            children: [
-                              TimerCell(
-                                onTap: () {
-                                  setState(() {
-                                    selected = Selected.hour;
-                                  });
-                                },
-                                title: "H",
-                                isSelected: selected == Selected.hour,
-                              ),
-                              TimerCell(
-                                onTap: () {
-                                  setState(() {
-                                    selected = Selected.min;
-                                  });
-                                },
-                                title: "MIN",
-                                isSelected: selected == Selected.min,
-                              ),
-                              TimerCell(
-                                onTap: () {
-                                  setState(() {
-                                    selected = Selected.sec;
-                                  });
-                                },
-                                title: "SEC",
-                                isSelected: selected == Selected.sec,
-                              ),
-                              const Spacer(),
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.redAccent,
-                                child: IconButton(
-                                  onPressed: () async {
-                                    startTimer(
-                                      Duration(
-                                          hours: h, seconds: s, minutes: m),
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    CupertinoIcons.stopwatch,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          home: HomePage(
+              hour: h,
+              min: m,
+              sec: s,
+              selected: selected,
+              onTap: (value) {
+                setState(() {
+                  selected = value;
+                });
+              }),
         ),
       ),
     );
@@ -421,6 +364,7 @@ class TimerCell extends StatelessWidget {
   final bool isSelected;
   final String title;
   final Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -431,7 +375,11 @@ class TimerCell extends StatelessWidget {
         width: 40,
         height: 30,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green : const Color(0xFFFFFFFF),
+          color: isSelected
+              ? EasyDynamicTheme.of(context).themeMode == ThemeMode.dark
+                  ? ligthTheme.colorScheme.secondary
+                  : darkTheme.colorScheme.secondary
+              : Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: isSelected ? Colors.white10 : const Color(0xFF859398),
             width: 1.5,
@@ -513,3 +461,125 @@ void _changeThemeFromKeyboardKeys(RawKeyDownEvent event, BuildContext context) {
 }
 
 //Orbitron
+class HomePage extends StatefulWidget {
+  const HomePage(
+      {super.key,
+      required this.hour,
+      required this.min,
+      required this.sec,
+      required this.selected,
+      required this.onTap});
+  final int hour;
+  final int min;
+  final int sec;
+  final Selected selected;
+  final Function(Selected selected) onTap;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int get h => widget.hour;
+  int get s => widget.sec;
+  int get m => widget.min;
+  Selected get selected => widget.selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: SizedBox(
+          width: 300,
+          height: 250,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Container(
+                width: 300,
+                height: 250,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(60),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(25),
+                width: 200,
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    width: 2.5,
+                    color: const Color(0xFFC4C8CB),
+                  ),
+                  color: const Color(0xFF91968D),
+                ),
+                alignment: Alignment.center,
+                child: SizedBox(
+                  child: TimeSegement(
+                    hour: h,
+                    isLast: true,
+                    min: m,
+                    sec: s,
+                    selected: selected,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(45.0),
+                    child: Row(
+                      children: [
+                        TimerCell(
+                          onTap: () {
+                            widget.onTap(Selected.hour);
+                          },
+                          title: "H",
+                          isSelected: selected == Selected.hour,
+                        ),
+                        TimerCell(
+                          onTap: () {
+                            widget.onTap(Selected.min);
+                          },
+                          title: "MIN",
+                          isSelected: selected == Selected.min,
+                        ),
+                        TimerCell(
+                          onTap: () {
+                            widget.onTap(Selected.sec);
+                          },
+                          title: "SEC",
+                          isSelected: selected == Selected.sec,
+                        ),
+                        const Spacer(),
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          child: IconButton(
+                            onPressed: () async {
+                              startTimer(
+                                Duration(hours: h, seconds: s, minutes: m),
+                              );
+                            },
+                            icon: Icon(
+                              CupertinoIcons.stopwatch,
+                              color: Theme.of(context).colorScheme.onSecondary,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
