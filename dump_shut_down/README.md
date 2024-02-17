@@ -2,10 +2,7 @@
 
 Dump Shutdown is a simple yet powerful desktop application designed to effortlessly schedule your computer's shutdown time. Built with Flutter, it offers a user-friendly interface that primarily relies on keyboard shortcuts for seamless operation.
 ### New Features:
-- **Dark/Light Mode**: Easily toggle between dark and light modes using the `d` and `l` keys respectively.
-- **Keyboard Controls**: Navigate the app swiftly using keyboard shortcuts:
-  - Press `r` to reset all values.
-  - Long Press on any area of the app to drag it
+- **New UI update**: Change in UI and add new button to enhance user experience
   
 
 https://github.com/nemo-i/My-dump-Project/assets/133984357/47f68be8-5a2f-42fe-a506-a4f52ef6dd30
@@ -23,7 +20,10 @@ https://github.com/nemo-i/My-dump-Project/assets/133984357/47f68be8-5a2f-42fe-a5
   - Press `Left Control` to abort the shutdown timer.
   - Press `c` to close the application.
 - **Customizable Key Bindings**: In future updates, the app will include a settings page to allow users to customize key bindings according to their preferences.
-
+- **Dark/Light Mode**: Easily toggle between dark and light modes using the `d` and `l` keys respectively.
+- **Keyboard Controls**: Navigate the app swiftly using keyboard shortcuts:
+  - Press `r` to reset all values.
+  - Long Press on any area of the app to drag it
 
 ### How to Use:
 
