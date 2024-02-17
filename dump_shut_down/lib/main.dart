@@ -148,6 +148,7 @@ class _DumpShutDownState extends State<DumpShutDown> {
           await windowManager.startDragging();
         },
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: ligthTheme,
           darkTheme: darkTheme,
           themeMode: EasyDynamicTheme.of(context).themeMode,
@@ -499,12 +500,13 @@ class _HomePageState extends State<HomePage> {
                 width: 300,
                 height: 250,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(60),
+                  borderRadius: BorderRadius.circular(6),
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               Container(
-                margin: const EdgeInsets.all(25),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                 width: 200,
                 height: 70,
                 decoration: BoxDecoration(
@@ -573,6 +575,79 @@ class _HomePageState extends State<HomePage> {
                         )
                       ],
                     ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6.5, vertical: 2),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.all(2),
+                            shape: const RoundedRectangleBorder(),
+                            backgroundColor: Colors.indigoAccent,
+                          ),
+                          onPressed: () async {
+                            await windowManager.minimize();
+                          },
+                          child: const Icon(
+                            Icons.minimize,
+                            size: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.all(2),
+                            shape: const RoundedRectangleBorder(),
+                            backgroundColor: Colors.indigoAccent,
+                          ),
+                          onPressed: () {},
+                          child: const Icon(
+                            Icons.open_with_outlined,
+                            size: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.all(2),
+                            shape: const RoundedRectangleBorder(),
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () async {
+                            await windowManager.close();
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            size: 17,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
