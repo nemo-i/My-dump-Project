@@ -10,7 +10,7 @@ https://github.com/nemo-i/My-dump-Project/assets/133984357/47f68be8-5a2f-42fe-a5
 
 
 ### Features:
-
+- **Future Update**: Need To Add Dialoge When Set Timeout to shutdown
 - **Intuitive UI**: Designed with simplicity in mind, Dump Shutdown provides a streamlined interface for efficient usage.
 - **Keyboard Controls**: Navigate the app swiftly using keyboard shortcuts:
   - Press `m` to select minutes. Use the arrow keys (↑, ↓) to increase or decrease the selected time value.
