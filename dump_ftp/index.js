@@ -4,15 +4,25 @@ const express = require('express');
 const app = express();
 const PORT = 4060;
 
-
-const data = [];
+app.set('view engine', 'ejs');
+let data = [];
+var data_path = path.join(__dirname, 'data');
 app.get('/', (req, res) => {
-    fs.readdir(__dirname, (err, files) => {
+    fs.readdir(data_path, (err, files) => {
+        data = [];
         for (const file of files) {
-            data.push(file);
+            var ob = {
+                name: file,
+                location: path.join(__dirname, file),
+            };
+            data.push(ob);
         }
+        console.log(data);
+    })
+    res.render('index', {
+        data: data
     });
-    res.send(data);
+
 });
 
 
