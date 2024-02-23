@@ -1,69 +1,81 @@
-let data = [
-    {
-        dir: 'books',
-        files: [
-            {
-                name: "CISSP",
-                path: "F\\h"
-            }
-        ],
-    },
-    {
-        dir: 'videos',
-        files: [
-            {
-                name: "CISSP",
-                path: "F\\h"
-            }
-        ],
-    }
-];
+const body = document.getElementById('body');
+const button = document.createElement('button');
+button.innerText = 'POST';
+body.appendChild(button);
+let files = [];
+getFilesInformationFromServer();
+const ul = document.createElement('ul');
+ul.innerText = 'Files';
+body.appendChild(ul);
 
-document.addEventListener("DOMContentLoaded", function () {
-    const body = document.getElementById("body");
-    const ul = document.createElement("ul");
-    body.appendChild(ul);
-
-    data.forEach((e) => {
-        const li = document.createElement("li");
-        const directoryName = document.createElement("span");
-        directoryName.innerText = e.dir;
-        directoryName.style.cursor = "pointer";
-        directoryName.addEventListener("click", function () {
-            filesUl.style.display = filesUl.style.display === "none" ? "block" : "none";
-        });
-        li.appendChild(directoryName);
-
-        const filesUl = document.createElement("ul");
-        e.files.forEach((file) => {
-            const fileLi = document.createElement("li");
-            fileLi.innerText = `${file.name} - ${file.path}`;
-            fileLi.style.cursor = "pointer";
-            fileLi.addEventListener("click", function () {
-                // Send a POST request to the server
-                fetch('/download', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ path: file.path })
-                })
-                    .then(response => {
-                        // Handle response, e.g., show a message to the user
-                        console.log('File download initiated');
-                    })
-                    .catch(error => {
-                        // Handle error
-                        console.error('Error occurred:', error);
-                    });
-
-                // Change color of the clicked item
-                fileLi.classList.add('clicked');
-            });
-            filesUl.appendChild(fileLi);
-        });
-
-        li.appendChild(filesUl);
-        ul.appendChild(li);
-    });
+button.addEventListener('click', () => {
+    sendFileInformationToServer({ id: 1, title: "Hello", location: "C:\\Users\\MRCPEX\\Downloads\\switch.png" });
 });
+
+async function sendFileInformationToServer(data) {
+    try {
+        // Send POST request to server to store file information
+        const postResponse = await fetch('http://192.168.1.5:4060/download', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        // Check if POST request was successful
+        if (!postResponse.ok) {
+            throw new Error('Failed to send file information to server.');
+        }
+
+        // Send GET request to trigger file download
+        const getResponse = await fetch('http://192.168.1.5:4060/download');
+
+        // Check if GET request was successful
+        if (!getResponse.ok) {
+            throw new Error('Failed to fetch file from server.');
+        }
+
+        // Trigger file download
+        const blob = await getResponse.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.title; // Specify the file name
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+
+async function getFilesInformationFromServer() {
+    try {
+        const response = await fetch('http://192.168.1.5:4060/files');
+        if (!response.ok) {
+            throw new Error('Failed to fetch files information from server.');
+        }
+        const data = await response.json();
+        files = data;
+        console.log(files);
+        // Populate the list of files here
+        files.forEach((e) => {
+            const { id, title, location } = e;
+            const li = document.createElement('li');
+            li.innerText = `${id}-${title}`;
+            ul.appendChild(li);
+            li.addEventListener('click', async () => {
+                console.log(`Clicked file information: ${id}-${title}-${location}`);
+                await sendFileInformationToServer({
+                    id: id,
+                    title: title,
+                    location: location,
+                });
+            });
+        });
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}
