@@ -194,16 +194,16 @@ Future<void> abortShutdownFromkeyboard(RawKeyEvent event) async {
   }
 }
 
-void startTimer(
-  Duration duration,
-) async {
-  await Process.run('shutdown', ['/s', '/t', duration.inSeconds.toString()])
-      .then((result) {
+void startTimer(Duration duration, BuildContext context) async {
+  final value =
+      await Process.run('shutdown', ['/s', '/t', duration.inSeconds.toString()])
+          .then((result) {
     log(result.stdout);
     log(result.stderr);
   }).catchError((error) {
     log(error);
   });
+  log(value.toString());
 }
 
 void changeResetTimerCellValuesFromKeyboard(
@@ -565,6 +565,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () async {
                               startTimer(
                                 Duration(hours: h, seconds: s, minutes: m),
+                                context,
                               );
                             },
                             icon: Icon(
